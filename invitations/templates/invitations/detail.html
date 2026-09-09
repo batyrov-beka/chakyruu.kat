@@ -1,0 +1,879 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ invitation.groom_name }} & {{ invitation.bride_name }} — Чакыруу билети</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Great+Vibes&family=Marck+Script&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+   <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #ffffff;
+        color: #4a3b32;
+        text-align: center;
+        overflow-x: hidden;
+    }
+
+
+    #welcomeOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: #bc9c74;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: #ffffff;
+        padding: 20px;
+        transition: transform 0.9s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+    }
+
+
+    #welcomeOverlay.fade-out {
+        opacity: 0;
+        transform: translateY(-100%);
+        pointer-events: none;
+    }
+
+    .welcome-title {
+        font-family: 'Marck Script', cursive;
+        font-size: 3.5rem;
+        margin-bottom: 5px;
+    }
+
+    .welcome-subtitle {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 40px;
+        opacity: 0.9;
+    }
+
+
+    .open-btn {
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, #e5c38c, #a87c43);
+        border-radius: 50%;
+        border: none;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.95rem;
+        letter-spacing: 2px;
+        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(229, 195, 140, 0.7); }
+        70% { box-shadow: 0 0 0 18px rgba(229, 195, 140, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(229, 195, 140, 0); }
+    }
+
+    .open-hint {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        margin-top: 30px;
+        opacity: 0.85;
+        line-height: 1.5;
+    }
+
+
+    .main-content {
+        display: none;
+        max-width: 450px;
+        margin: 0 auto;
+        background: #ffffff;
+        min-height: 100vh;
+        box-shadow: none;
+        padding-bottom: 50px;
+        position: relative;
+        opacity: 0;
+        transform: scale(0.96);
+        transition: opacity 1s ease 0.2s, transform 1s ease 0.2s;
+    }
+
+    .main-content.show-content {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .hero-img {
+        width: 100%;
+        max-height: 650px;
+        object-fit: cover;
+        object-position: center;
+    }
+
+
+    .vertical-names {
+        margin: 35px 0 15px;
+        position: relative;
+    }
+
+    .name-part {
+        font-family: 'Great Vibes', 'Marck Script', cursive;
+        font-size: 3.8rem;
+        color: #2c2520;
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    .ampersand {
+        font-family: 'Great Vibes', 'Marck Script', cursive;
+        font-size: 2.2rem;
+        color: #c0a080;
+        margin: -5px 0;
+    }
+
+    .event-type-label {
+        font-family: 'Marck Script', cursive;
+        font-size: 2.3rem;
+        color: #c0a080;
+        margin: 10px 0 20px;
+    }
+
+    .guest-title {
+        font-family: 'Marck Script', cursive;
+        font-size: 2.2rem;
+        color: #2c2520;
+        margin: 15px 0 20px;
+        padding: 0 10px;
+    }
+
+    .text-block-uppercase {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+        line-height: 1.9;
+        color: #5a4b41;
+        padding: 0 25px;
+        margin: 20px 0;
+        text-transform: uppercase;
+    }
+
+    .text-block-main {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.78rem;
+        letter-spacing: 1px;
+        line-height: 1.9;
+        color: #5a4b41;
+        padding: 0 25px;
+        margin: 20px 0;
+        text-transform: uppercase;
+        white-space: pre-line;
+    }
+
+
+    .calendar-box {
+        margin: 35px 0;
+    }
+
+    .month-title {
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 4px;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: #4a3b32;
+    }
+
+    .days-inline {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        color: #6e5e53;
+        margin-bottom: 15px;
+    }
+
+    .day-circled {
+        border: 1px solid #c0a080;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2c2520;
+        font-size: 1.7rem;
+    }
+
+    .time-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        color: #2c2520;
+        margin: 10px 0 5px;
+    }
+
+    .year-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        color: #2c2520;
+        margin-bottom: 20px;
+    }
+
+
+    .countdown {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 25px 0;
+    }
+
+    .count-box {
+        background: #ffffff;
+        border: 1px solid #eee8df;
+        padding: 12px 10px;
+        border-radius: 12px;
+        min-width: 65px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+
+    .count-num {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        color: #2c2520;
+        font-weight: 600;
+    }
+
+    .count-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.6rem;
+        color: #9e8c7e;
+        letter-spacing: 2px;
+        margin-top: 5px;
+        text-transform: uppercase;
+    }
+
+    .weekdays-vertical {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        color: #8c786a;
+        margin-top: 20px;
+        text-transform: uppercase;
+    }
+
+    .weekday-item {
+        padding: 3px 15px;
+        width: fit-content;
+    }
+
+    .weekday-item.weekday-pill {
+        border: 1px solid #c0a080;
+        border-radius: 20px;
+        color: #2c2520;
+        font-weight: 700;
+        padding: 5px 25px;
+    }
+
+
+    .address-title {
+        font-family: 'Marck Script', cursive;
+        font-size: 3.2rem;
+        color: #c0a080;
+        margin-bottom: 5px;
+    }
+
+    .city-text {
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 2.5px;
+        font-size: 0.78rem;
+        color: #5a4b41;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
+
+    .restaurant-text {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        color: #2c2520;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .map-btn {
+        display: inline-block;
+        background: #4a3b32;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        padding: 14px 32px;
+        border-radius: 25px;
+        text-decoration: none;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(74, 59, 50, 0.2);
+        transition: background 0.3s;
+    }
+
+    .map-btn:hover {
+        background: #332822;
+    }
+
+
+    .hosts-title {
+        font-family: 'Marck Script', cursive;
+        font-size: 2.8rem;
+        color: #c0a080;
+        margin-bottom: 5px;
+    }
+
+    .hosts-names {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        font-weight: 600;
+        color: #2c2520;
+        text-transform: uppercase;
+    }
+
+    .phone-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        color: #7a6a5e;
+        margin-top: 10px;
+    }
+
+
+    .rsvp-section {
+        background: #ffffff;
+        padding: 35px 20px;
+        margin-top: 40px;
+    }
+
+    .rsvp-subtitle {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 3px;
+        color: #7a6a5e;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .rsvp-title {
+        font-family: 'Comfortaa', cursive;
+        font-size: 1.6rem;
+        color: #2c2520;
+        line-height: 1.4;
+        margin-bottom: 25px;
+        font-weight: 600;
+    }
+
+    .rsvp-option {
+        background: #ffffff;
+        border: 1px solid #dcd3c5;
+        padding: 16px 20px;
+        border-radius: 30px;
+        margin: 12px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+        color: #4a3b32;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .rsvp-option.active {
+        border-color: #bc9c74;
+        background-color: #faf6f0;
+        box-shadow: 0 4px 12px rgba(188, 156, 116, 0.15);
+    }
+
+    .rsvp-option.active .radio-dot {
+        border-color: #bc9c74;
+        background-color: #bc9c74;
+        box-shadow: inset 0 0 0 3px #ffffff;
+    }
+
+    .radio-dot {
+        width: 16px;
+        height: 16px;
+        border: 1.5px solid #c0a080;
+        border-radius: 50%;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: #4a3b32;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        padding: 16px;
+        border: none;
+        border-radius: 30px;
+        text-transform: uppercase;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0.5;
+    }
+
+    .submit-btn.enabled {
+        opacity: 1;
+        background: #bc9c74;
+        box-shadow: 0 5px 15px rgba(188, 156, 116, 0.3);
+    }
+
+    .success-message {
+        padding: 25px 10px;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .success-icon {
+        font-size: 2.5rem;
+        color: #bc9c74;
+        margin-bottom: 10px;
+    }
+
+    .success-message h3 {
+        font-family: 'Marck Script', cursive;
+        font-size: 2.2rem;
+        color: #2c2520;
+        margin-bottom: 5px;
+    }
+
+    .success-message p {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.8rem;
+        color: #6e5e53;
+        letter-spacing: 1px;
+    }
+
+
+    .floating-music-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        background: #4a3b32;
+        color: white;
+        border-radius: 50%;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        cursor: pointer;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .divider-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+        color: #c5a059;
+        font-size: 18px;
+    }
+
+    .divider-icon::before,
+    .divider-icon::after {
+        content: '';
+        flex: 1;
+        max-width: 60px;
+        height: 1px;
+        background-color: #e0d0b8;
+        margin: 0 12px;
+    }
+
+    .icon-gold {
+        color: #c0a080;
+        margin-right: 8px;
+        font-size: 0.9em;
+    }
+
+    .map-btn i {
+        margin-right: 6px;
+    }
+
+    .soft-line-divider {
+        width: 60%;
+        height: 1px;
+        margin: 25px auto;
+        background: linear-gradient(to right, transparent, #c0a080, transparent);
+        border: none;
+    }
+
+    .heart-rings-divider {
+        margin: 20px 0;
+    }
+
+
+
+  .hero-img {
+      width: 100%;
+      height: 550px;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 20px 20px 20px 20px;
+      border: 3px solid #F5EBE0;
+      box-shadow: 0 12px 28px rgba(197, 160, 112, 0.22);
+      display: block;
+      margin: 12px auto;
+  }
+</style>
+</head>
+
+<body>
+
+
+    <div id="welcomeOverlay">
+        <div class="welcome-title">Чакыруу Билети</div>
+        <div class="welcome-subtitle">Үйлөнүү тоюна чакыруу</div>
+        <button class="open-btn" onclick="openInvitation()">АЧУУ</button>
+        <div class="open-hint">
+            Чакырууну ачуу үчүн «АЧУУ»<br>баскычын басыңыз.
+        </div>
+    </div>
+
+
+    <button class="floating-music-btn" id="musicToggleBtn" onclick="toggleMusic()" style="display: none;">❚❚</button>
+    <audio id="bgMusic" loop preload="auto">
+        {% if invitation.music %}
+            <source src="{{ invitation.music.url }}" type="audio/mpeg">
+        {% endif %}
+        <source src="{% static 'music.mp3' %}" type="audio/mpeg">
+    </audio>
+
+
+    <div class="main-content" id="mainContent">
+
+        <div class="hero-image-wrapper">
+            {% if invitation.cover_image %}
+                <img src="{{ invitation.cover_image.url }}" alt="Той ээлери" class="hero-img">
+            {% else %}
+                <img src="{% static 'images/default_cover.jpg' %}" alt="Той ээлери" class="hero-img">
+            {% endif %}
+
+            <div class="divider-icon">
+                <span>✦</span>
+            </div>
+        </div>
+
+
+<div class="vertical-names" data-aos="fade-up">
+    <div class="name-part">{{ invitation.groom_name }}</div>
+    <div class="ampersand">&</div>
+    <div class="name-part">{{ invitation.bride_name }}</div>
+</div>
+
+        <div class="event-type-label" data-aos="fade-up">
+            Үйлөнүү тоюна чакыруу
+        </div>
+
+
+       <div class="guest-title" data-aos="fade-up" id="guestNameDisplay">
+    {% if guest %}
+        Урматтуу {{ guest.name }}!
+    {% else %}
+        Урматтуу коногубуз!
+    {% endif %}
+</div>
+
+        <div class="text-block-uppercase" data-aos="fade-up">
+            Урматтуу бир туугандар,<br>
+            куда-кудагыйлар, достор,<br>
+            классташтар, кесиптештер,<br>
+            кошуналар жана сыйлуу коноктор!
+        </div>
+
+
+<div class="text-block-main" data-aos="fade-up">
+    {% if invitation.invitation_text %}
+        {{ invitation.invitation_text|linebreaks }}
+    {% else %}
+        Сиз(дер)ди уулубуз {{ invitation.groom_name|default:"Байыш" }} менен келинибиз {{ invitation.bride_name|default:"Айдай" }}дын тоюна арналган салтанаттуу дасторконубузга кадырлуу конок болууга чакырабыз.
+    {% endif %}
+</div>
+
+        <div class="heart-rings-divider">
+            <svg width="60" height="40" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 55 C20 35, 10 20, 25 10 C35 3, 45 12, 50 18 C55 12, 65 3, 75 10 C90 20, 80 35, 50 55 Z" stroke="#c0a080" stroke-width="2" fill="none"/>
+                <circle cx="44" cy="12" r="5" stroke="#c0a080" stroke-width="1.5" fill="none"/>
+                <circle cx="56" cy="12" r="5" stroke="#c0a080" stroke-width="1.5" fill="none"/>
+            </svg>
+        </div>
+
+
+        <div class="calendar-box" data-aos="fade-up">
+            <div class="month-title">— {{ invitation.event_date|date:"F" }} —</div>
+
+            <div class="days-inline">
+                <span>{{ invitation.event_date|date:"d"|add:"-2" }}</span>
+                <span>{{ invitation.event_date|date:"d"|add:"-1" }}</span>
+                <div class="day-circled">{{ invitation.event_date|date:"d" }}</div>
+                <span>{{ invitation.event_date|date:"d"|add:"1" }}</span>
+                <span>{{ invitation.event_date|date:"d"|add:"2" }}</span>
+            </div>
+
+            <div class="time-text"><i class="fa-regular fa-clock icon-gold"></i>{{ invitation.event_time|time:"H:i" }}</div>
+            <div class="year-text">{{ invitation.event_date|date:"Y" }}</div>
+
+
+            <div class="countdown" id="countdown">
+                <div class="count-box">
+                    <div class="count-num" id="days">--</div>
+                    <div class="count-label">Күн</div>
+                </div>
+                <div class="count-box">
+                    <div class="count-num" id="hours">--</div>
+                    <div class="count-label">Саат</div>
+                </div>
+                <div class="count-box">
+                    <div class="count-num" id="minutes">--</div>
+                    <div class="count-label">Мүнөт</div>
+                </div>
+                <div class="count-box">
+                    <div class="count-num" id="seconds">--</div>
+                    <div class="count-label">Сек</div>
+                </div>
+            </div>
+
+            <div class="weekdays-vertical">
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '1' %}weekday-pill{% endif %}">Дүйшөмбү</div>
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '2' %}weekday-pill{% endif %}">Шейшемби</div>
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '3' %}weekday-pill{% endif %}">Шаршемби</div>
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '4' %}weekday-pill{% endif %}">Бейшемби</div>
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '5' %}weekday-pill{% endif %}">Жума</div>
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '6' %}weekday-pill{% endif %}">Ишемби</div>
+                <div class="weekday-item {% if invitation.event_date|date:'w' == '0' %}weekday-pill{% endif %}">Жекшемби</div>
+            </div>
+        </div>
+
+        <div class="soft-line-divider"></div>
+
+
+        <div style="margin: 40px 0;" data-aos="fade-up">
+            <div class="address-title">Дареги:</div>
+
+            <div class="city-text">
+                {{ invitation.city|default:"Ош шаары" }}
+            </div>
+
+            <div class="restaurant-text">
+               <i class="fa-solid fa-location-dot icon-gold"></i> {{ invitation.restaurant_name|default:"Долоно" }} Рестораны
+            </div>
+
+            {% if invitation.map_link %}
+                <a href="{{ invitation.map_link }}" target="_blank" class="map-btn">
+                    <i class="fa-solid fa-map-location-dot"></i> Картаны ачуу ↗
+                </a>
+            {% else %}
+                <a href="https://2gis.kg" target="_blank" class="map-btn">
+                    <i class="fa-solid fa-map-location-dot"></i> Картаны ачуу ↗
+                </a>
+            {% endif %}
+        </div>
+
+
+        <div style="margin: 40px 0;" data-aos="fade-up">
+            <div class="hosts-title">Урматтоо менен,</div>
+            <div class="hosts-names">
+                {{ invitation.hosts_parents|default:"Нурканбек & Эльмира" }}
+            </div>
+
+            {% if invitation.phone_number %}
+                <div class="phone-text">
+                    Суроолор боюнча: <i class="fa-solid fa-phone icon-gold"></i>{{ invitation.phone_number }}
+                </div>
+            {% endif %}
+        </div>
+
+
+        <div class="rsvp-section" data-aos="fade-up">
+            <div class="rsvp-subtitle">ЖООП БЕРҮҮ</div>
+            <div class="rsvp-title">Келериңизди алдын ала ырастап коюуңузду суранабыз:</div>
+
+            <form id="rsvpForm">
+                <label class="rsvp-option" onclick="selectOption(this)">
+                    <input type="radio" name="attendance" value="Ооба, барам!" style="display: none;">
+                    <span class="radio-dot"></span>
+                    <span class="option-text">Ооба, барам!</span>
+                </label>
+
+                <label class="rsvp-option" onclick="selectOption(this)">
+                    <input type="radio" name="attendance" value="Жубайым менен барам" style="display: none;">
+                    <span class="radio-dot"></span>
+                    <span class="option-text">Жубайым менен барам</span>
+                </label>
+
+                <label class="rsvp-option" onclick="selectOption(this)">
+                    <input type="radio" name="attendance" value="Өкүнүчтүүсү, келе албайм" style="display: none;">
+                    <span class="radio-dot"></span>
+                    <span class="option-text">Өкүнүчтүүсү, келе албайм</span>
+                </label>
+
+                <button type="button" id="submitRsvpBtn" class="submit-btn" disabled onclick="sendResponse()">
+                    Жоопту жөнөтүү
+                </button>
+            </form>
+
+            <div id="successMessage" class="success-message" style="display: none;">
+                <i class="fa-solid fa-circle-check success-icon"></i>
+                <h3>Ыраахмат!</h3>
+                <p>Сиздин жообуңуз кабыл алынды!</p>
+            </div>
+        </div>
+
+    </div>
+
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000 });
+
+    let audio = document.getElementById('bgMusic');
+    let musicBtn = document.getElementById('musicToggleBtn');
+    let selectedValue = "";
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (audio) {
+            audio.load();
+        }
+    });
+
+
+    const eventDateStr = "{{ invitation.event_date|date:'Y-m-d' }}T{{ invitation.event_time|time:'H:i:s' }}";
+    const eventDate = new Date(eventDateStr).getTime();
+    let countdownInterval;
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const diff = eventDate - now;
+
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minsEl = document.getElementById('minutes');
+        const secsEl = document.getElementById('seconds');
+
+        if (isNaN(diff) || diff <= 0) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            if (daysEl) {
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minsEl.textContent = '00';
+                secsEl.textContent = '00';
+            }
+            return;
+        }
+
+        if (daysEl) {
+            daysEl.textContent = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            hoursEl.textContent = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            minsEl.textContent = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+            secsEl.textContent = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+        }
+    }
+
+    function startCountdown() {
+        updateCountdown();
+        if (countdownInterval) clearInterval(countdownInterval);
+        countdownInterval = setInterval(updateCountdown, 1000);
+    }
+
+
+    function openInvitation() {
+        if (audio) {
+            audio.play().then(() => {
+                if (musicBtn) musicBtn.innerText = '❚❚';
+            }).catch(err => {
+                console.log("Музыка иштеген жок:", err);
+            });
+        }
+
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const mainContent = document.getElementById('mainContent');
+
+        if (welcomeOverlay) {
+            welcomeOverlay.classList.add('fade-out');
+
+            mainContent.style.display = 'block';
+            if (musicBtn) musicBtn.style.display = 'flex';
+
+            setTimeout(() => {
+                mainContent.classList.add('show-content');
+                AOS.refresh();
+                startCountdown();
+            }, 100);
+
+            setTimeout(() => {
+                welcomeOverlay.style.display = 'none';
+            }, 900);
+        }
+    }
+
+    function toggleMusic() {
+        if (!audio) return;
+        if (audio.paused) {
+            audio.play();
+            if (musicBtn) musicBtn.innerText = '❚❚';
+        } else {
+            audio.pause();
+            if (musicBtn) musicBtn.innerText = '▶';
+        }
+    }
+
+
+    function selectOption(element) {
+        document.querySelectorAll('.rsvp-option').forEach(opt => {
+            opt.classList.remove('active');
+        });
+
+        element.classList.add('active');
+
+        const radio = element.querySelector('input[type="radio"]');
+        radio.checked = true;
+        selectedValue = radio.value;
+
+        const btn = document.getElementById('submitRsvpBtn');
+        btn.disabled = false;
+        btn.classList.add('enabled');
+    }
+
+    function sendResponse() {
+        if (!selectedValue) return;
+
+        document.getElementById('rsvpForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+    }
+
+</script>
+</body>
+</html>

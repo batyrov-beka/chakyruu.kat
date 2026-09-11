@@ -2,9 +2,10 @@ from django.contrib import admin
 from django.utils.html import format_html
 from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
+from import_export.formats import base_formats
 from import_export.widgets import ForeignKeyWidget
 from .models import Guest, Invitation
-from import_export.formats import base_formats
+
 
 class GuestResource(resources.ModelResource):
     invitation = fields.Field(
@@ -27,7 +28,8 @@ class GuestResource(resources.ModelResource):
         )
 
     def dehydrate_full_link(self, guest):
-        base_url = "http://127.0.0.1:8000"
+        # Бул жердеги base_url өзгөртүлдү:
+        base_url = "https://chakyruu.site"
         return f"{base_url}/{guest.invitation.slug}/?guest={guest.token}"
 
 
@@ -60,7 +62,6 @@ class GuestAdmin(ImportExportModelAdmin):
     readonly_fields = ("token",)
 
     def get_guest_link(self, obj):
-       
         link = f"https://chakyruu.site/{obj.invitation.slug}/?guest={obj.token}"
         return format_html(
             '<a href="{0}" target="_blank" style="color: #2b6cb0; font-weight: bold;">Шилтеме</a>',

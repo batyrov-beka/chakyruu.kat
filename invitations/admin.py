@@ -46,6 +46,8 @@ class InvitationAdmin(admin.ModelAdmin):
 
 @admin.register(Guest)
 class GuestAdmin(ImportExportModelAdmin):
+    formats = [XLSX, CSV]
+
     resource_class = GuestResource
     list_display = (
         "name",

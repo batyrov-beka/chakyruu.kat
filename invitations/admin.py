@@ -4,7 +4,7 @@ from import_export import fields, resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 from .models import Guest, Invitation
-
+from import_export.formats import base_formats
 
 class GuestResource(resources.ModelResource):
     invitation = fields.Field(
@@ -46,7 +46,7 @@ class InvitationAdmin(admin.ModelAdmin):
 
 @admin.register(Guest)
 class GuestAdmin(ImportExportModelAdmin):
-    formats = [XLSX, CSV]
+    formats = [base_formats.XLSX, base_formats.CSV]
 
     resource_class = GuestResource
     list_display = (

@@ -60,7 +60,8 @@ class GuestAdmin(ImportExportModelAdmin):
     readonly_fields = ("token",)
 
     def get_guest_link(self, obj):
-        link = f"http://127.0.0.1:8000/{obj.invitation.slug}/?guest={obj.token}"
+       
+        link = f"https://chakyruu.site/{obj.invitation.slug}/?guest={obj.token}"
         return format_html(
             '<a href="{0}" target="_blank" style="color: #2b6cb0; font-weight: bold;">Шилтеме</a>',
             link,

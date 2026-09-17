@@ -11,10 +11,10 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
-    'cloudinary_storage',          # <-- ЭҢ БИРИНЧИ САПКА КОЮҢУЗ
-    'django.contrib.staticfiles',  # <-- ЭКИНЧИ САПТА ТУРСУН
+    'cloudinary_storage',
+    'django.contrib.staticfiles',
     'cloudinary',
-    'django.contrib.admin',        # <-- Ушул жерге түшүрүңүз
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -54,7 +54,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wedding_site.wsgi.application'
 
-# Database (Neon DB / Render DATABASE_URL аркылуу туташуу)
+
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -74,9 +74,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Cloudinary Storage
 CLOUDINARY_STORAGE = {
-    'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL'),
+    'CLOUD_NAME': 'jjvpydcb',
+    'API_KEY': '991288783988376',
+    'API_SECRET': 'KuzbNtLgBV9nqYRpxLcaZ8nkHAo',
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

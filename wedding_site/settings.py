@@ -6,19 +6,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-*psdzd@mt-yhrvpqy9_unzq&*do5_194n1^@k0n_33df67-761')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'cloudinary_storage',          # <-- ЭҢ БИРИНЧИ САПКА КОЮҢУЗ
+    'django.contrib.staticfiles',  # <-- ЭКИНЧИ САПТА ТУРСУН
+    'cloudinary',
+    'django.contrib.admin',        # <-- Ушул жерге түшүрүңүз
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
-    'cloudinary',
     'invitations',
     'import_export',
 ]
@@ -79,7 +79,8 @@ CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL'),
 }
 
-# STORAGES ЖӨНДӨӨЛӨРҮ (WhiteNoise деплой катасын айланып өтүү үчүн):
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",

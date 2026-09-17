@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 
 class Invitation(models.Model):
@@ -26,7 +27,7 @@ class Invitation(models.Model):
     restaurant_name = models.CharField("Ресторандын аты", max_length=100)
     map_link = models.URLField("2GIS / Яндекс Карта шилтемеси", blank=True, null=True)
 
-    cover_image = models.ImageField("Башкы сүрөт", upload_to='covers/', blank=True, null=True)
+    cover_image = CloudinaryField("Башкы сүрөт", folder='covers/', blank=True, null=True)
     music = models.FileField("Музыка (MP3)", upload_to='music/', blank=True, null=True)
 
     phone_number = models.CharField("WhatsApp номер (RSVP үчүн)", max_length=20, help_text="Мисалы: 996700000000")

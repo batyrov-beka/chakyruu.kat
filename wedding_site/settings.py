@@ -1,6 +1,9 @@
+import os
+import dj_database_url
 import cloudinary
+from pathlib import Path
 
-# Конфигурация Cloudinary
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),

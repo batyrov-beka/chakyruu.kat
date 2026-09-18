@@ -22,7 +22,10 @@ def invitation_detail(request, slug):
 def home_view(request):
     invitation = Invitation.objects.last()
 
-    if invitation and invitation.music:
-        print("Музыкалык файл табылды:", invitation.music.url)
+    if invitation and getattr(invitation, 'music', None):
+        try:
+            print("Музыкалык файл табылды:", invitation.music.url)
+        except Exception as e:
+            print("Музыкалык файлдын URL алууда ката чыкты:", e)
 
     return render(request, "invitations/detail.html", {"invitation": invitation})

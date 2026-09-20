@@ -620,7 +620,8 @@
     {% if invitation.invitation_text %}
         {{ invitation.invitation_text|linebreaks }}
     {% else %}
-        Сиз(дер)ди уулубуз {{ invitation.groom_name|default:"Байыш" }} менен келинибиз {{ invitation.bride_name|default:"Айдай" }}дын тоюна арналган салтанаттуу дасторконубузга кадырлуу конок болууга чакырабыз.
+       {% load kyrgyz_case %}
+        Сиз(дер)ди уулубуз {{ invitation.groom_name|default:"Байыш" }} менен келинибиз {{ invitation.bride_name|default:"Айдай"|genitive_case }} тоюна арналган салтанаттуу дасторконубузга кадырлуу конок болууга чакырабыз.
     {% endif %}
 </div>
 

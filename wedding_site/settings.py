@@ -87,7 +87,6 @@ cloudinary.config(
     secure=True,
 )
 
-# Өзгөртүлгөн статикалык сактагычтар (WhiteNoise катасын оңдоо үчүн)
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 STORAGES = {

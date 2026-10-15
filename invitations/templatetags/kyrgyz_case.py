@@ -37,3 +37,18 @@ def genitive_case(name):
         return f"{name_str}{suffix.upper()}"
 
     return f"{name_str}{suffix}"
+
+MONTHS_KY = {
+    1: 'Январь', 2: 'Февраль', 3: 'Март', 4: 'Апрель',
+    5: 'Май', 6: 'Июнь', 7: 'Июль', 8: 'Август',
+    9: 'Сентябрь', 10: 'Октябрь', 11: 'Ноябрь', 12: 'Декабрь'
+}
+
+@register.filter
+def kyrgyz_month(date_value):
+    if not date_value:
+        return ""
+    try:
+        return MONTHS_KY.get(date_value.month, "")
+    except AttributeError:
+        return ""

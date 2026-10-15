@@ -635,7 +635,7 @@
 
 
         <div class="calendar-box" data-aos="fade-up">
-            <div class="month-title">— {{ invitation.event_date|date:"F" }} —</div>
+          <div class="month-title">— {{ invitation.event_date|kyrgyz_month }} —</div>
 
             <div class="days-inline">
                 <span>{{ invitation.event_date|date:"d"|add:"-2" }}</span>
